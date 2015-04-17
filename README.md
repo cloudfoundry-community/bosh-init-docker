@@ -33,7 +33,7 @@ Finally, run the `bosh-init deploy` command (via helpful wrapper):
 The output will look similar to:
 
 ```
-Deployment manifest: '/Users/drnic/Projects/bosh-deployments/experiments/redis-micro/redis-from-scratch.yml'
+Deployment manifest: '/Users/drnic/Projects/bosh-deployments/experiments/bosh-init-redis/redis.yml'
 Deployment state: 'deployment.json'
 
 Started validating
