@@ -7,5 +7,5 @@ cd $DIR/..
 
 export PATH=$PATH:$PWD/bin
 
-bosh-init delete redis.yml \
+bosh-init delete docker.yml \
   assets/bosh-aws-cpi-release-${aws_cpi_version}.tgz

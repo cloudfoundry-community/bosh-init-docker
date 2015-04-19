@@ -1,6 +1,6 @@
 #!/bin/bash
 
-redis_version=${redis_version:-9}
+docker_version=${docker_version:-11}
 aws_cpi_version=${aws_cpi_version:-5}
 stemcell_version=${stemcell_version:-2830}
 
@@ -10,10 +10,10 @@ cd $DIR/..
 mkdir -p assets
 mkdir -p bin
 
-if [[ ! -f assets/redis-${redis_version}.tgz ]]; then
-  echo "Downloading redis-${redis_version}.tgz"
-  curl -Lo assets/redis-${redis_version}.tgz \
-    "https://bosh.io/d/github.com/cloudfoundry-community/redis-boshrelease?v=${redis_version}"
+if [[ ! -f assets/docker-${docker_version}.tgz ]]; then
+  echo "Downloading docker-${docker_version}.tgz"
+  curl -Lo assets/docker-${docker_version}.tgz \
+    "https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease?v=${docker_version}"
 fi
 if [[ ! -f assets/bosh-aws-cpi-release-${aws_cpi_version}.tgz ]]; then
   echo "Downloading bosh-aws-cpi-release-${aws_cpi_version}.tgz"

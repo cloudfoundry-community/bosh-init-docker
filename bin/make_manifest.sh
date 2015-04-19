@@ -14,9 +14,9 @@ if [[
   exit 1
 fi
 
-cat >redis.yml <<EOF
+cat >docker.yml <<EOF
 ---
-name: redis
+name: docker
 
 resource_pools:
 - name: default
@@ -26,19 +26,62 @@ resource_pools:
     availability_zone: us-east-1c
 
 jobs:
-- name: redis
+- name: docker
   instances: 1
   persistent_disk: 10240
   templates:
-  - {name: redis, release: redis}
+  - {name: docker, release: docker}
+  - {name: containers, release: docker}
   networks:
   - name: vip
     static_ips: [$EIP]
   - name: default
 
   properties:
-    redis:
-      port: 6379
+    containers:
+      - name: redis
+        image: "redis"
+        command: "--dir /var/lib/redis/ --appendonly yes"
+        bind_ports:
+          - "6379:6379"
+        bind_volumes:
+          - "/var/lib/redis"
+        entrypoint: "redis-server"
+        memory: "256m"
+        cpu_shares: 1
+        env_vars:
+          - "EXAMPLE_VAR=1"
+
+      - name: mysql
+        image: "google/mysql"
+        bind_ports:
+          - "3306:3306"
+        bind_volumes:
+          - "/mysql"
+
+      - name: elasticsearch
+        image: "bosh/elasticsearch"
+        links:
+          - mysql:db
+        depends_on:
+          - mysql
+        bind_ports:
+          - "9200:9200"
+          - "9300:9300"
+        bind_volumes:
+          - "/data"
+        dockerfile: |
+          FROM dockerfile/java
+          RUN \
+            cd /tmp && \
+            wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.tar.gz && \
+            tar xvzf elasticsearch-1.1.1.tar.gz && \
+            rm -f elasticsearch-1.1.1.tar.gz && \
+            mv /tmp/elasticsearch-1.1.1 /elasticsearch
+          WORKDIR /data
+          CMD ["/elasticsearch/bin/elasticsearch"]
+          EXPOSE 9200
+          EXPOSE 9300
 
 networks:
 - name: default
