@@ -23,6 +23,7 @@ resource_pools:
   network: default
   cloud_properties:
     instance_type: m3.medium
+    availability_zone: us-east-1c
 
 jobs:
 - name: redis
@@ -37,8 +38,6 @@ jobs:
 
   properties:
     redis:
-      address: "127.0.0.1"
-      password: "redis"
       port: 6379
 
 networks:
